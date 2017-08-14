@@ -13,22 +13,22 @@
  * the canvas' context (ctx) object globally available to make writing app.js
  * a little simpler to work with.
  */
-
 var Engine = (function(global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas elements height/width and add it to the DOM.
      */
+
     var doc = global.document,
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
+    canvas.setAttribute("id", "gameCanvas");
 
     canvas.width = 505;
     canvas.height = 606;
     doc.body.appendChild(canvas);
-
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
      */
@@ -39,6 +39,8 @@ var Engine = (function(global) {
          * would be the same for everyone (regardless of how fast their
          * computer is) - hurray time!
          */
+
+
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
@@ -59,6 +61,7 @@ var Engine = (function(global) {
         win.requestAnimationFrame(main);
     }
 
+
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
      * game loop.
@@ -69,6 +72,17 @@ var Engine = (function(global) {
         main();
     }
 
+    function gameOver() {
+        ctx.fillStyle = "rgba(0, 0, 255, 1)";
+        ctx.font = "bold 24px Arial";
+        ctx.fillText("Game Over", 80, 100);
+    }
+
+    function youWin() {
+        ctx.fillStyle = "rgba(0, 0, 255, 1)";
+        ctx.font = "bold 24px Arial";
+        ctx.fillText("You win!", 80, 100);
+    }
     /* This function is called by main (our game loop) and itself calls all
      * of the functions which may need to update entity's data. Based on how
      * you implement your collision detection (when two entities occupy the
@@ -94,7 +108,13 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
+
+        allRocks.forEach(function(rock) {
+            rock.update(dt);
+        });
+
         player.update();
+
     }
 
     /* This function initially draws the "game level", it will then call
@@ -108,12 +128,13 @@ var Engine = (function(global) {
          * for that particular row of the game level.
          */
         var rowImages = [
-                'images/water-block.png',   // Top row is water
-                'images/stone-block.png',   // Row 1 of 3 of stone
-                'images/stone-block.png',   // Row 2 of 3 of stone
-                'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/grass-block.png',   // Row 1 of 2 of grass
-                'images/grass-block.png'    // Row 2 of 2 of grass
+                'images/water-block.png', // Top row is water
+                'images/stone-block.png', // Row 1 of 3 of stone
+                'images/stone-block.png', // Row 2 of 3 of stone
+                'images/stone-block.png',
+                'images/stone-block.png', // Row 3 of 3 of stone
+                'images/grass-block.png',
+                'images/Rock.png' // Row 2 of 2 of grass
             ],
             numRows = 6,
             numCols = 5,
@@ -151,6 +172,10 @@ var Engine = (function(global) {
             enemy.render();
         });
 
+        allRocks.forEach(function(rock) {
+            rock.render()
+        });
+
         player.render();
     }
 
@@ -171,7 +196,10 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        // 'images/Gem Blue.png',
+        // 'images/Rock.png',
+        'images/Rock.png'
     ]);
     Resources.onReady(init);
 

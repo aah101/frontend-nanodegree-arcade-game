@@ -1,13 +1,39 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Effective JavaScript: Frogger</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>
+    <div id="startScreen">
+        <h1>Frogger</h1>
+        <h2>Cross the road four times for safety</h2>
+        <h2>Click to start</h2>
+    </div>
+    <div id="counters">
+        <div id="boxleft">
+            <label id="qty lives">Lives</label>
+            <input id="qtyLives" value="3" />
+        </div>
+        <div id="boxright">
+            <label id="qty crosses">Crosses</abbr></label>
+            <input id="qtyCrosses" value="0" />
+        </div>
+    </div>
+    <script>
+        var el = document.getElementById("startScreen")
+        el.addEventListener("click", function() {
+            document.getElementById("startScreen").style.display = "none";
+            document.getElementById("gameCanvas").style.display = "block";
+            document.getElementById("counters").style.display = "block";
+        });
+    </script>
 </body>
+
 </html>
