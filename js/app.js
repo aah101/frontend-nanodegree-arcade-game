@@ -15,13 +15,6 @@ var Enemy = function(x, y) {
 var lives = 3;
 var crosses = 0;
 
-// enemy has its own reset method, so does player, so why this? does it do anything?
-// Player.prototype.reset = function() {
-//   player.x = 200;
-//   player.y = 400;
-//   //rock.prototype.render();
-// }
-
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticksf
@@ -33,7 +26,8 @@ Enemy.prototype.update = function(dt) {
     //if player and enemy collide call roadkil function 
     if (player.x >= this.x - 35 && player.x <= this.x + 35) {
         if (player.y >= this.y - 40 && player.y <= this.y + 40) {
-            roadKill()
+            roadKill();
+            player.reset();
         }
     }
 
@@ -75,15 +69,21 @@ var Rock = function(x, y) {
     this.sprite = "images/Rock.png";
 };
 
+var Player = function(x, y) {
+    this.x = x;
+    this.y = y;
+    this.width = 30;
+    this.height = 30;
+    this.sprite = 'images/char-boy.png';
+};
+
 //draw rock on canvas
 Rock.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
-//reset player after collision, reset position of rocks after each game event
+//reset position of rocks after each game event
 Object.prototype.reset = function() {
-    player.x = 200;
-    player.y = 400;
     allRocks = [];
 for (var i = 0; i < 7; i++) {
     allRocks.push(new Rock());
@@ -94,30 +94,21 @@ for (var i = 0; i < 7; i++) {
 Rock.prototype.update = function(dt) {
     this.dt = dt;
     this.checkCollision();
-}
+};
 
 //check for player collision
 Rock.prototype.checkCollision = function() {
-    // allRocks.forEach(function(rock) {
     if (this.x < player.x + player.width &&
         this.x + this.width > player.x &&
         this.y < player.y + player.height &&
         this.height + this.y > player.y) {
         player.obstacle();
-        
     }
 };
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-var Player = function(x, y) {
-    this.x = x;
-    this.y = y;
-    this.width = 30;
-    this.height = 30;
-    this.sprite = 'images/char-boy.png';
-};
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -126,6 +117,12 @@ Player.prototype.render = function() {
 
 Player.prototype.handleInput = function(e) {
     this.ctlKey = e;
+};
+
+//reset player position 
+Player.prototype.reset = function() {
+    // this.x = 200;
+    this.y = 400;
 };
 
 //create variables for tracking player position
@@ -137,11 +134,6 @@ Player.prototype.move = function() {
     prevX = this.x;
     prevY = this.y;
 };
-
-// Player.prototype.reset = function(x, y) {
-//     this.x = 200;
-//     this.y = 400;
-// };
 
 //push player back to previous position in collision with rock 
 Player.prototype.obstacle = function() {
@@ -168,12 +160,11 @@ Player.prototype.update = function() {
 
     //if player reahces safety, push back to start, increase number of crosses
     if (this.y < -20) {
-        reset();
-        // reset();
+        this.reset()
         alert("made it!");
         crosses++;
         document.getElementById("qtyCrosses").value++;
-        //if corrses  equals 4, player wins, return to start screen 
+        //if crosses equal 4, player wins, return to start screen 
         if (crosses === 4) {
             alert("You win!");
             document.getElementById("gameCanvas").style.display = "none";
